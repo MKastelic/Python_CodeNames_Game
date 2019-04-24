@@ -231,7 +231,6 @@ class Board:
         makes contact with this agent, contact points are given to both teams.
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
 
         da_setup_window = Toplevel()
         #  Setup text entry fields depending on the team in play and confirm the team has double agents to use.
@@ -254,8 +253,8 @@ class Board:
         self.blue_check = False         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False          #  set to True only if the Red agent selected as a double agent is found on the board and available.
         da_setup_window.geometry('400x180+600+400')
-        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', font_size)).grid(row=3, column=0, columnspan=2)
-        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', font_size, 'bold')).grid(row=5, column=1)
+        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', 10)).grid(row=3, column=0, columnspan=2)
+        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', 10, 'bold')).grid(row=5, column=1)
 
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
@@ -280,14 +279,13 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
 
         #  If the spy check for an available red agent passes, then decrement the Blue team's remaining double agents
         #  and indicate successful agent insertion (only 1 insertion allowed per turn).
         if game.team == 'Blue' and self.red_check:
             window.destroy()
             game.blue_da -= 1
-            Label(frame, text='{0:5d}'.format(game.blue_da), foreground='blue', font=('Courier', font_size, 'bold'),
+            Label(frame, text='{0:5d}'.format(game.blue_da), foreground='blue', font=('Courier', 10, 'bold'),
                   justify=RIGHT).grid(row=7, column=1, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -296,7 +294,7 @@ class Board:
         elif game.team == 'Red' and self.blue_check:
             window.destroy()
             game.red_da -= 1
-            Label(frame, text='{0:5d}'.format(game.red_da), foreground='red', font=('Courier', font_size, 'bold'),
+            Label(frame, text='{0:5d}'.format(game.red_da), foreground='red', font=('Courier', 10, 'bold'),
                   justify=RIGHT).grid(row=7, column=2, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -322,22 +320,21 @@ class Board:
         number of asterisks can be added by players to further disquise the true length of the codename.
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         self.blue_check = False                         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False                          #  set to True only if the Red agent selected as a double agent is found on the board and available.
         swap_setup_window = Toplevel()
         swap_setup_window.geometry('400x180+600+400')
-        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', font_size)).grid(row=3, column=0)
+        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', 10)).grid(row=3, column=0)
 
         #  Set up text entry fields to allow both blue and red agents to be selected for a potential spy swap.
         self.blue_entry = ttk.Entry(swap_setup_window, width=10)
         self.blue_entry.config(show='*')
         self.blue_entry.grid(row=4, column=0)
-        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', font_size, 'bold')).grid(row=5, column=0)
+        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', 10, 'bold')).grid(row=5, column=0)
         self.red_entry = ttk.Entry(swap_setup_window, width=10)
         self.red_entry.config(show='*')
         self.red_entry.grid(row=4, column=1)
-        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', font_size, 'bold')).grid(row=5, column=1)
+        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', 10, 'bold')).grid(row=5, column=1)
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
         cboard = current_board.tolist()
@@ -369,20 +366,19 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         #  If the spy check for both an available blue and red agent passes, then for the team making the swap, decrement their remaining double agents.
         #  Indicate that a successful agent swap has been made (only 1 insertion allowed per turn) and remind spymasters to update browsers.
         if self.blue_check == True and self.red_check == True:
             window.destroy()
             if game.team == 'Blue':
                 game.blue_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.blue_swaps), foreground='blue', font=('Courier', font_size, 'bold'),
+                Label(frame, text='{0:5d}'.format(game.blue_swaps), foreground='blue', font=('Courier', 10, 'bold'),
                       justify=RIGHT).grid(row=6, column=1, padx=5, pady=5)
                 if game.blue_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
             else:
                 game.red_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.red_swaps), foreground='red', font=('Courier', font_size, 'bold'),
+                Label(frame, text='{0:5d}'.format(game.red_swaps), foreground='red', font=('Courier', 10, 'bold'),
                       justify=RIGHT).grid(row=6, column=2, padx=5, pady=5)
                 if game.red_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
@@ -405,7 +401,6 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         #  Get the text entry for either team and remove extra '*' spymaster may have typed to provide extra hiding of entry.
         #  Add two LF and convert to upper case to be compatible with display of codewords on the game board.
         if team_color == 'blue':
@@ -422,7 +417,7 @@ class Board:
                     row = i
                     col = c_or_iboard[0][i].index(b_word)
             if (int(c_or_iboard[2][row][col]) == 0) and (c_or_iboard[1][row][col] == team_color.capitalize()):
-                Label(window, text='Match', foreground='black', font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
+                Label(window, text='Match', foreground='black', font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
                 #  Flag that the spy check was successful and make the spy swap on this copy of the board.  Also set the
                 #  red/blue_da_codename variable to the codename found on the board to track double agent status.
                 if team_color == 'blue':
@@ -435,12 +430,12 @@ class Board:
                     game.blue_da_codename = (c_or_iboard[0][row][col]).upper()
             else:
                 okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
-                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
+                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
                 if okay:
                     window.lift(root)
         else:
             okay = messagebox.showerror(message='No match found for codename entered')
-            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
+            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
             if okay:
                 window.lift(root)
 
