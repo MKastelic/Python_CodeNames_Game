@@ -93,6 +93,8 @@ class Board:
         :param word_array:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
+        
         #  If the game is not paused and it is not the spymaster's turn in "Split" time mode then allow operatives to make contacts.
         if game.pause and not game.master:
             #  A zero at any word_array[2,row,col] means the agent at that codename has not yet been contacted.
@@ -118,10 +120,10 @@ class Board:
                 bname.config(image=bname.img)
                 if game.team == 'Blue':
                     game.red_score += 1
-                    Label(frame, text=str(game.red_score), foreground='red', font=('Courier',10, 'bold')).grid(row=9,column=2)
+                    Label(frame, text=str(game.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
                 else:
                     game.blue_score += 1
-                    Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',10, 'bold')).grid(row=9,column=1)
+                    Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
                 winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
                 startfile(Assets_dir + 'MovieClips\\SALT Assassination1.mp4')
                 #  Game is paused and the board is cleared from the browser.  Players can then choose to start a new game.
@@ -143,11 +145,11 @@ class Board:
                     bname.config(image=bname.img)
                     word_array[2,row,col] = 1
                     game.red_contacts -= 1
-                    Label(submaster, text=str(game.red_contacts), foreground='red', font=('Courier',10, 'bold')).grid(row=2,column=2)
+                    Label(submaster, text=str(game.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
                     #  If the Red team has made contact and the Blue team has a double agent assigned, then Blue team is also credited.
                     if word_array[0,row,col] == game.blue_da_codename and game.team == 'Red':
                         game.blue_contacts -= 1
-                        Label(submaster, text=str(game.blue_contacts), foreground='blue', font=('Courier',10, 'bold')).grid(row=2,column=1)
+                        Label(submaster, text=str(game.blue_contacts), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=2,column=1)
                     #  Game ends in a tie if both team's contacts simultaneously reach zero.  Game is paused and board is cleared from browser.
                     if game.red_contacts == 0 and game.blue_contacts == 0:
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
@@ -159,7 +161,7 @@ class Board:
                     #  If only Red team's contacts reach zero, Red team wins.  Game is paused and board is cleared from browser.
                     elif game.red_contacts == 0:
                         game.red_score += 1
-                        Label(frame, text=str(game.red_score), foreground='red', font=('Courier',10, 'bold')).grid(row=9,column=2)
+                        Label(frame, text=str(game.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
                         game.Pause_Resume()
                         BlankHTML()
@@ -169,7 +171,7 @@ class Board:
                     #  If only Blue team's contacts reach zero, Blue team wins.  Game is paused and board is cleared from browser.
                     elif game.blue_contacts == 0:
                         game.blue_score += 1
-                        Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',10, 'bold')).grid(row=9,column=1)
+                        Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
                         game.Pause_Resume()
                         BlankHTML()
@@ -185,11 +187,11 @@ class Board:
                     bname.config(image=bname.img)
                     word_array[2,row,col] = 1
                     game.blue_contacts -= 1
-                    Label(submaster, text=str(game.blue_contacts), foreground='blue', font=('Courier',10, 'bold')).grid(row=2,column=1)
+                    Label(submaster, text=str(game.blue_contacts), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=2,column=1)
                     #  If the Blue team has made contact and the Red team has a double agent assigned, then Red team is also credited.
                     if word_array[0,row,col] == game.red_da_codename and game.team == 'Blue':
                         game.red_contacts -= 1
-                        Label(submaster, text=str(game.red_contacts), foreground='red', font=('Courier',10, 'bold')).grid(row=2,column=2)
+                        Label(submaster, text=str(game.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
                     #  Game ends in a tie if both team's contacts simultaneously reach zero.  Game is paused and board is cleared from browser.
                     if game.red_contacts == 0 and game.blue_contacts == 0:
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
@@ -201,7 +203,7 @@ class Board:
                     #  If only Blue team's contacts reach zero, Blue team wins.  Game is paused and board is cleared from browser.
                     if game.blue_contacts == 0:
                         game.blue_score += 1
-                        Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',10, 'bold')).grid(row=9,column=1)
+                        Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
                         game.Pause_Resume()
                         BlankHTML()
@@ -211,7 +213,7 @@ class Board:
                     #  If only Red team's contacts reach zero, Red team wins.  Game is paused and board is cleared from browser.
                     elif game.red_contacts == 0:
                         game.red_score += 1
-                        Label(frame, text=str(game.red_score), foreground='red', font=('Courier',10, 'bold')).grid(row=9,column=2)
+                        Label(frame, text=str(game.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
                         winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
                         game.Pause_Resume()
                         BlankHTML()
@@ -229,6 +231,8 @@ class Board:
         makes contact with this agent, contact points are given to both teams.
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
+
         da_setup_window = Toplevel()
         #  Setup text entry fields depending on the team in play and confirm the team has double agents to use.
         if game.team == 'Blue' and game.blue_da:
@@ -250,8 +254,8 @@ class Board:
         self.blue_check = False         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False          #  set to True only if the Red agent selected as a double agent is found on the board and available.
         da_setup_window.geometry('400x180+600+400')
-        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', 10)).grid(row=3, column=0, columnspan=2)
-        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', 10, 'bold')).grid(row=5, column=1)
+        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', font_size)).grid(row=3, column=0, columnspan=2)
+        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', font_size, 'bold')).grid(row=5, column=1)
 
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
@@ -276,12 +280,14 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
+
         #  If the spy check for an available red agent passes, then decrement the Blue team's remaining double agents
         #  and indicate successful agent insertion (only 1 insertion allowed per turn).
         if game.team == 'Blue' and self.red_check:
             window.destroy()
             game.blue_da -= 1
-            Label(frame, text='{0:5d}'.format(game.blue_da), foreground='blue', font=('Courier', 10, 'bold'),
+            Label(frame, text='{0:5d}'.format(game.blue_da), foreground='blue', font=('Courier', font_size, 'bold'),
                   justify=RIGHT).grid(row=7, column=1, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -290,7 +296,7 @@ class Board:
         elif game.team == 'Red' and self.blue_check:
             window.destroy()
             game.red_da -= 1
-            Label(frame, text='{0:5d}'.format(game.red_da), foreground='red', font=('Courier', 10, 'bold'),
+            Label(frame, text='{0:5d}'.format(game.red_da), foreground='red', font=('Courier', font_size, 'bold'),
                   justify=RIGHT).grid(row=7, column=2, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -316,21 +322,22 @@ class Board:
         number of asterisks can be added by players to further disquise the true length of the codename.
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         self.blue_check = False                         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False                          #  set to True only if the Red agent selected as a double agent is found on the board and available.
         swap_setup_window = Toplevel()
         swap_setup_window.geometry('400x180+600+400')
-        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', 10)).grid(row=3, column=0)
+        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', font_size)).grid(row=3, column=0)
 
         #  Set up text entry fields to allow both blue and red agents to be selected for a potential spy swap.
         self.blue_entry = ttk.Entry(swap_setup_window, width=10)
         self.blue_entry.config(show='*')
         self.blue_entry.grid(row=4, column=0)
-        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', 10, 'bold')).grid(row=5, column=0)
+        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', font_size, 'bold')).grid(row=5, column=0)
         self.red_entry = ttk.Entry(swap_setup_window, width=10)
         self.red_entry.config(show='*')
         self.red_entry.grid(row=4, column=1)
-        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', 10, 'bold')).grid(row=5, column=1)
+        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', font_size, 'bold')).grid(row=5, column=1)
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
         cboard = current_board.tolist()
@@ -362,19 +369,20 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         #  If the spy check for both an available blue and red agent passes, then for the team making the swap, decrement their remaining double agents.
         #  Indicate that a successful agent swap has been made (only 1 insertion allowed per turn) and remind spymasters to update browsers.
         if self.blue_check == True and self.red_check == True:
             window.destroy()
             if game.team == 'Blue':
                 game.blue_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.blue_swaps), foreground='blue', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:5d}'.format(game.blue_swaps), foreground='blue', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=6, column=1, padx=5, pady=5)
                 if game.blue_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
             else:
                 game.red_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.red_swaps), foreground='red', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:5d}'.format(game.red_swaps), foreground='red', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=6, column=2, padx=5, pady=5)
                 if game.red_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
@@ -397,6 +405,7 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         #  Get the text entry for either team and remove extra '*' spymaster may have typed to provide extra hiding of entry.
         #  Add two LF and convert to upper case to be compatible with display of codewords on the game board.
         if team_color == 'blue':
@@ -413,7 +422,7 @@ class Board:
                     row = i
                     col = c_or_iboard[0][i].index(b_word)
             if (int(c_or_iboard[2][row][col]) == 0) and (c_or_iboard[1][row][col] == team_color.capitalize()):
-                Label(window, text='Match', foreground='black', font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+                Label(window, text='Match', foreground='black', font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
                 #  Flag that the spy check was successful and make the spy swap on this copy of the board.  Also set the
                 #  red/blue_da_codename variable to the codename found on the board to track double agent status.
                 if team_color == 'blue':
@@ -426,12 +435,12 @@ class Board:
                     game.blue_da_codename = (c_or_iboard[0][row][col]).upper()
             else:
                 okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
-                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
                 if okay:
                     window.lift(root)
         else:
             okay = messagebox.showerror(message='No match found for codename entered')
-            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', font_size, 'bold')).grid(row=5, column=team_col)
             if okay:
                 window.lift(root)
 
@@ -483,6 +492,7 @@ class Game_Control:
         and create a randomized list of codewords from the code_words.txt file found in the Assets subdirectory from
         where the program runs.
         '''
+        
         self.first_game = 2                      #  counter to track the number of the game in the session series
         self.blue_score = 0                      #  number of games in the session won by the blue team
         self.red_score = 0                       #  number of games in the session won by the red team
@@ -499,7 +509,7 @@ class Game_Control:
         #self.team = 'blue'                       #  tracks team color in play
         self.blue_contacts = 9                   #  tracks number of contacts remaining for blue team (blue starts first game and so is assigned 9 contacts)
         self.red_contacts = 8                    #  tracks number of contacts remaining for red team
-
+        
         #  Read all 400 code words stored in a text file to a list and append two newline control characters to each (to allow alignment when overlaid on blank
         #  card stock image).  Randomize the word order of the code_words list and make a copy.
         Assets_dir = os.getcwd() + '\\Assets\\'
@@ -519,6 +529,7 @@ class Game_Control:
         initialize the contact count array.  Select 25 words for the current round.
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         #  Determine which team's turn based on the number of games played within a session.
         if self.first_game % 2 == 0:
             self.team = 'Blue'
@@ -543,10 +554,10 @@ class Game_Control:
             self.red_contacts = 9
             self.blue_contacts = 8
         #  Display the number of contacts remaining and scores for each team.
-        Label(frame, text=str(self.blue_contacts), foreground='blue', font=('Courier',10, 'bold')).grid(row=2,column=1)
-        Label(frame, text=str(self.red_contacts), foreground='red', font=('Courier',10, 'bold')).grid(row=2,column=2)
-        Label(frame, text=str(self.blue_score), foreground='blue', font=('Courier',10, 'bold')).grid(row=9,column=1)
-        Label(frame, text=str(self.red_score), foreground='red', font=('Courier',10, 'bold')).grid(row=9,column=2)
+        Label(frame, text=str(self.blue_contacts), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=2,column=1)
+        Label(frame, text=str(self.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
+        Label(frame, text=str(self.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
+        Label(frame, text=str(self.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
 
         #  Based on which time mode has been selected from the "Settings" window, configure the status display and variables to contain the buttons
         #  and fields needed to control and report the time tracking during play.
@@ -557,18 +568,18 @@ class Game_Control:
             next_turn_btn.state(['disabled'])
             self.master = True
 
-            Label(frame, text='SpyMaster Time Remaining', wraplength=210,font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
-            Label(frame, text='Operative Time Remaining', wraplength=210,font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=5,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='blue',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='blue',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=5,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='red',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='red',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=5,column=2,padx=5,pady=5)
+            Label(frame, text='SpyMaster Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
+            Label(frame, text='Operative Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=0,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=1,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=2,padx=5,pady=5)
         elif self.time_config == 1:
             next_turn_btn.state(['!disabled'])
             self.master = False
-            Label(frame, text='    Team Time Remaining', wraplength=210,font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='blue',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='red',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
+            Label(frame, text='    Team Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
+            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
         else:
             next_turn_btn.state(['!disabled'])
             self.master = False
@@ -617,9 +628,9 @@ class Game_Control:
         if self.max_spy_swap != 0:
             self.red_swaps = self.max_spy_swap
             self.blue_swaps = self.max_spy_swap
-            Label(frame, text='     Spy Swaps Remaining', wraplength=210,font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=6,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.blue_swaps),foreground='blue',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=6,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.red_swaps),foreground='red',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=6,column=2,padx=5,pady=5)
+            Label(frame, text='     Spy Swaps Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=0,padx=5,pady=5)
+            Label(frame, text='{0:5d}'.format(self.blue_swaps),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=1,padx=5,pady=5)
+            Label(frame, text='{0:5d}'.format(self.red_swaps),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=2,padx=5,pady=5)
             self.spy_swap_btn = ttk.Button(frame,text = 'Spy Swap', command=gui.Swap)
             self.spy_swap_btn.grid(row=13, column=0, padx=10, pady=10)
         else:
@@ -632,9 +643,9 @@ class Game_Control:
             self.red_da = self.max_double_agents
             self.blue_da = self.max_double_agents
 
-            Label(frame, text=' Double Agents Remaining', wraplength=210,font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=7,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.blue_da),foreground='blue',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=7,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.red_da),foreground='red',font=('Courier', 10, 'bold'),justify=RIGHT).grid(row=7,column=2,padx=5,pady=5)
+            Label(frame, text=' Double Agents Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=0,padx=5,pady=5)
+            Label(frame, text='{0:5d}'.format(self.blue_da),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=1,padx=5,pady=5)
+            Label(frame, text='{0:5d}'.format(self.red_da),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=2,padx=5,pady=5)
             self.double_agent_btn = ttk.Button(frame,text = 'Double Agent', command=gui.DA)
             self.double_agent_btn.grid(row=14, column=0, padx=10, pady=10)
         else:
@@ -691,8 +702,9 @@ class Game_Control:
         self.setup_window = Toplevel()
         self.setup_window.geometry('480x450+600+400')
 
+        font_size = round((width_resize + height_resize)/2*10)
         #  Create radiobuttons to allow players to select various time constraint options.
-        lbl = Label(self.setup_window, text='Time Tracking', font=('Courier', 10))
+        lbl = Label(self.setup_window, text='Time Tracking', font=('Courier', font_size))
         lbl.place(x=10, y=5)
         rb0 = ttk.Radiobutton(self.setup_window, text='No Time Limit', command=self.Update_Time_None, variable=self.time_cfg, value=0)
         rb0.place(x=10, y=25)
@@ -700,7 +712,7 @@ class Game_Control:
         rb1.place(x=120, y=25)
         rb2 = ttk.Radiobutton(self.setup_window, text='Split Time', command=self.Update_Time_Split, variable=self.time_cfg, value=2)
         rb2.place(x=230, y=25)
-        lbl = Label(self.setup_window, text='Advanced Features', font=('Courier', 10))
+        lbl = Label(self.setup_window, text='Advanced Features', font=('Courier', font_size))
         lbl.place(x=10, y=200)
 
         """
@@ -754,8 +766,9 @@ class Game_Control:
         :param man_swap_value:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         man_swap_lbl = Label(self.setup_window, text='Manual Spy Swaps Allowed: {0:1d}'.format(int(float(man_swap_value))),
-                             font=('Courier', 10))
+                             font=('Courier', font_size))
         man_swap_lbl.place(x=150, y=230)
 
     def Update_Ran_Mole(self, ran_mole_value):
@@ -764,8 +777,9 @@ class Game_Control:
         :param ran_mole_value:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         ran_mole_lbl = Label(self.setup_window, text='Random Mole Frequency:  {0:3d}'.format(int(float(ran_mole_value))),
-                             font=('Courier', 10))
+                             font=('Courier', font_size))
         ran_mole_lbl.place(x=150, y=290)
 
     def Update_Man_Double(self, man_double_value):
@@ -774,9 +788,10 @@ class Game_Control:
         :param man_double_value:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         man_double_lbl = Label(self.setup_window,
                                text='Manual Double Agents Allowed: {0:1d}'.format(int(float(man_double_value))),
-                               font=('Courier', 10))
+                               font=('Courier', font_size))
         man_double_lbl.place(x=150, y=350)
 
     """
@@ -849,8 +864,9 @@ class Game_Control:
         :param time_setting:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         self.time_lbl = Label(self.setup_window, text='Total Team Time (sec): {0:3d}'.format(int(float(time_setting))),
-                         font=('Courier', 10))
+                         font=('Courier', font_size))
         self.time_lbl.place(x=40, y=60)
         if self.time_cfg == 2:
             self.Operative_time = int(float(self.split_value.get()) * int(float(time_setting)))
@@ -858,7 +874,7 @@ class Game_Control:
             self.scale_lbl = Label(self.setup_window,
                               text='Spymaster: {0:3d} sec           Operatives: {1:3d} sec'.format(self.Spymaster_time,
                                                                                                    self.Operative_time),
-                              font=('Courier', 10))
+                              font=('Courier', font_size))
             self.scale_lbl.place(x=40, y=130)
 
 
@@ -869,12 +885,13 @@ class Game_Control:
         :param scale_value:
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         self.Operative_time = int(float(scale_value) * self.time_value.get())
         self.Spymaster_time = int(self.time_value.get() - self.Operative_time)
         self.scale_lbl = Label(self.setup_window,
                                text='Spymaster: {0:3d} sec           Operatives: {1:3d} sec'.format(self.Spymaster_time,
                                                                                                     self.Operative_time),
-                               font=('Courier', 10))
+                               font=('Courier', font_size))
         self.scale_lbl.place(x=40, y=130)
 
 
@@ -1004,12 +1021,13 @@ class Game_Control:
         Called every 1000 ms, task performs display updates for scores, elapsed time and other status parameters.
         :return:
         '''
+        font_size = round((width_resize + height_resize)/2*10)
         #  If game has been paused (i.e., self.pause = 0), then task does not run.
         if self.pause:
             if self.team == 'Blue':
 
                 self.blue_time = self.blue_total + time() - self.start_time
-                Label(frame, text='{0:5.0f} s'.format(self.blue_time), foreground='blue', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:5.0f} s'.format(self.blue_time), foreground='blue', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=8, column=1, padx=5, pady=5)
                 try:
                     if self.blue_hold_time_remain > 0:
@@ -1052,9 +1070,9 @@ class Game_Control:
                         self.blue_operative_remain = 0
                         self.Next_Turn()
                     Label(frame, text='{0:5.0f} s'.format(int(self.blue_spymaster_remain)), foreground='blue',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
                     Label(frame, text='{0:5.0f} s'.format(int(self.blue_operative_remain)), foreground='blue',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=5, column=1, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=1, padx=5, pady=5)
                 elif self.time_config == 1:
                     #  In "Shared" time mode, play multiple alarm sound when team time remaining is < 20 seconds.
                     if self.blue_time_remain < 20 and self.play_flag == 0:
@@ -1066,10 +1084,10 @@ class Game_Control:
                         self.blue_time_remain = 0
                         self.Next_Turn()
                     Label(frame, text='{0:5.0f} s'.format(self.blue_time_remain), foreground='blue',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
             else:
                 self.red_time = self.red_total + time() - self.start_time
-                Label(frame, text='{0:5.0f} s'.format(self.red_time), foreground='red', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:5.0f} s'.format(self.red_time), foreground='red', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=8, column=2, padx=5, pady=5)
                 try:
                     if self.red_hold_time_remain > 0:
@@ -1110,9 +1128,9 @@ class Game_Control:
                         self.red_operative_remain = 0
                         self.Next_Turn()
                     Label(frame, text='{0:5.0f} s'.format(self.red_spymaster_remain), foreground='red',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
                     Label(frame, text='{0:5.0f} s'.format(self.red_operative_remain), foreground='red',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=5, column=2, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=2, padx=5, pady=5)
                 elif self.time_config == 1:
                     if self.red_time_remain < 20 and self.play_flag == 0:
                         self.play_flag = 1
@@ -1122,7 +1140,7 @@ class Game_Control:
                         self.red_time_remain = 0
                         self.Next_Turn()
                     Label(frame, text='{0:5.0f} s'.format(self.red_time_remain), foreground='red',
-                          font=('Courier', 10, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
+                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
 
             #  If the random mole option has been selected in the "Settings" menu, call the Mole_Agent() method at a random interval which is not
             #  to be less than 25 seconds and is proportional to the mole frequency selected.  At the highest frequency setting allowed in the
@@ -1168,6 +1186,7 @@ def Set_FTP():
     Open interactive window to allow players to enter FTP account information for spy master key card browser display.
     :return:
     '''
+    font_size = round((width_resize + height_resize)/2*10)
     #  Create text entry fields for FTP account parameters and initialize variables.
     FTP_setup_window = Toplevel()
     FTP_domain = ttk.Entry(FTP_setup_window, width=25)
@@ -1188,10 +1207,10 @@ def Set_FTP():
     FTP_Folder.config(show='*')
     file_path = os.path.join(os.getcwd(), 'ftp_config.txt')
     FTP_setup_window.geometry('350x200+600+400')
-    Label(FTP_setup_window, text='FTP Domain',font=('Courier', 10, 'bold')).grid(row=10, column=0)
-    Label(FTP_setup_window, text='Account ID',font=('Courier', 10, 'bold')).grid(row=11, column=0)
-    Label(FTP_setup_window, text='Password',font=('Courier', 10, 'bold')).grid(row=12, column=0) 
-    Label(FTP_setup_window, text='FTP Directory',font=('Courier', 10, 'bold')).grid(row=13, column=0)
+    Label(FTP_setup_window, text='FTP Domain',font=('Courier', font_size, 'bold')).grid(row=10, column=0)
+    Label(FTP_setup_window, text='Account ID',font=('Courier', font_size, 'bold')).grid(row=11, column=0)
+    Label(FTP_setup_window, text='Password',font=('Courier', font_size, 'bold')).grid(row=12, column=0) 
+    Label(FTP_setup_window, text='FTP Directory',font=('Courier', font_size, 'bold')).grid(row=13, column=0)
 
 
     def FTP_Reset():
