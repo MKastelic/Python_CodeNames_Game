@@ -562,7 +562,7 @@ class Game_Control:
         #  Based on which time mode has been selected from the "Settings" window, configure the status display and variables to contain the buttons
         #  and fields needed to control and report the time tracking during play.
         if self.time_config == 2:
-            self.operatives_turn_btn = ttk.Button(frame,text = 'Operatives Turn', command=self.Op_Turn)
+            self.operatives_turn_btn = ttk.Button(frame,text = 'Operatives Turn',style='my.TButton', command=self.Op_Turn)
             self.operatives_turn_btn.grid(row=12, column=0, padx=10, pady=10)
             self.operatives_turn_btn.state(['!disabled'])
             next_turn_btn.state(['disabled'])
@@ -631,7 +631,7 @@ class Game_Control:
             Label(frame, text='     Spy Swaps Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=0,padx=5,pady=5)
             Label(frame, text='{0:5d}'.format(self.blue_swaps),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=1,padx=5,pady=5)
             Label(frame, text='{0:5d}'.format(self.red_swaps),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=2,padx=5,pady=5)
-            self.spy_swap_btn = ttk.Button(frame,text = 'Spy Swap', command=gui.Swap)
+            self.spy_swap_btn = ttk.Button(frame,text = 'Spy Swap',style='my.TButton', command=gui.Swap)
             self.spy_swap_btn.grid(row=13, column=0, padx=10, pady=10)
         else:
             self.red_swaps = 0
@@ -646,7 +646,7 @@ class Game_Control:
             Label(frame, text=' Double Agents Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=0,padx=5,pady=5)
             Label(frame, text='{0:5d}'.format(self.blue_da),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=1,padx=5,pady=5)
             Label(frame, text='{0:5d}'.format(self.red_da),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=2,padx=5,pady=5)
-            self.double_agent_btn = ttk.Button(frame,text = 'Double Agent', command=gui.DA)
+            self.double_agent_btn = ttk.Button(frame,text = 'Double Agent',style='my.TButton', command=gui.DA)
             self.double_agent_btn.grid(row=14, column=0, padx=10, pady=10)
         else:
             self.red_da = 0
@@ -702,9 +702,8 @@ class Game_Control:
         self.setup_window = Toplevel()
         self.setup_window.geometry('480x450+600+400')
 
-        font_size = round((width_resize + height_resize)/2*10)
         #  Create radiobuttons to allow players to select various time constraint options.
-        lbl = Label(self.setup_window, text='Time Tracking', font=('Courier', font_size))
+        lbl = Label(self.setup_window, text='Time Tracking', font=('Courier', 10))
         lbl.place(x=10, y=5)
         rb0 = ttk.Radiobutton(self.setup_window, text='No Time Limit', command=self.Update_Time_None, variable=self.time_cfg, value=0)
         rb0.place(x=10, y=25)
@@ -712,7 +711,7 @@ class Game_Control:
         rb1.place(x=120, y=25)
         rb2 = ttk.Radiobutton(self.setup_window, text='Split Time', command=self.Update_Time_Split, variable=self.time_cfg, value=2)
         rb2.place(x=230, y=25)
-        lbl = Label(self.setup_window, text='Advanced Features', font=('Courier', font_size))
+        lbl = Label(self.setup_window, text='Advanced Features', font=('Courier', 10))
         lbl.place(x=10, y=200)
 
         """
@@ -766,9 +765,8 @@ class Game_Control:
         :param man_swap_value:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         man_swap_lbl = Label(self.setup_window, text='Manual Spy Swaps Allowed: {0:1d}'.format(int(float(man_swap_value))),
-                             font=('Courier', font_size))
+                             font=('Courier', 10))
         man_swap_lbl.place(x=150, y=230)
 
     def Update_Ran_Mole(self, ran_mole_value):
@@ -777,9 +775,8 @@ class Game_Control:
         :param ran_mole_value:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         ran_mole_lbl = Label(self.setup_window, text='Random Mole Frequency:  {0:3d}'.format(int(float(ran_mole_value))),
-                             font=('Courier', font_size))
+                             font=('Courier', 10))
         ran_mole_lbl.place(x=150, y=290)
 
     def Update_Man_Double(self, man_double_value):
@@ -788,10 +785,9 @@ class Game_Control:
         :param man_double_value:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         man_double_lbl = Label(self.setup_window,
                                text='Manual Double Agents Allowed: {0:1d}'.format(int(float(man_double_value))),
-                               font=('Courier', font_size))
+                               font=('Courier', 10))
         man_double_lbl.place(x=150, y=350)
 
     """
@@ -864,9 +860,8 @@ class Game_Control:
         :param time_setting:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         self.time_lbl = Label(self.setup_window, text='Total Team Time (sec): {0:3d}'.format(int(float(time_setting))),
-                         font=('Courier', font_size))
+                         font=('Courier', 10))
         self.time_lbl.place(x=40, y=60)
         if self.time_cfg == 2:
             self.Operative_time = int(float(self.split_value.get()) * int(float(time_setting)))
@@ -874,7 +869,7 @@ class Game_Control:
             self.scale_lbl = Label(self.setup_window,
                               text='Spymaster: {0:3d} sec           Operatives: {1:3d} sec'.format(self.Spymaster_time,
                                                                                                    self.Operative_time),
-                              font=('Courier', font_size))
+                              font=('Courier', 10))
             self.scale_lbl.place(x=40, y=130)
 
 
@@ -885,13 +880,12 @@ class Game_Control:
         :param scale_value:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
         self.Operative_time = int(float(scale_value) * self.time_value.get())
         self.Spymaster_time = int(self.time_value.get() - self.Operative_time)
         self.scale_lbl = Label(self.setup_window,
                                text='Spymaster: {0:3d} sec           Operatives: {1:3d} sec'.format(self.Spymaster_time,
                                                                                                     self.Operative_time),
-                               font=('Courier', font_size))
+                               font=('Courier', 10))
         self.scale_lbl.place(x=40, y=130)
 
 
