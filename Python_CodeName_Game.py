@@ -504,7 +504,8 @@ class Game_Control:
         #self.team = 'blue'                       #  tracks team color in play
         self.blue_contacts = 9                   #  tracks number of contacts remaining for blue team (blue starts first game and so is assigned 9 contacts)
         self.red_contacts = 8                    #  tracks number of contacts remaining for red team
-        
+
+
         #  Read all 400 code words stored in a text file to a list and append two newline control characters to each (to allow alignment when overlaid on blank
         #  card stock image).  Randomize the word order of the code_words list and make a copy.
         Assets_dir = os.getcwd() + '\\Assets\\'
@@ -518,22 +519,33 @@ class Game_Control:
         self.code_words = code_words
         self.code_words_copy = code_words.copy()
 
+
     def New_Game(self):
         '''
         Start setup of an individual game within a session.  Check current team color for who goes first in the round.  Setup spies and randomize and re-
         initialize the contact count array.  Select 25 words for the current round.
         :return:
         '''
+
+
+        try:
+            SendFTP()
+        except:
+            okay = messagebox.showerror(message='FTP connection cannot be made. Re-enter credentials')
+            if okay:
+                Set_FTP()
+                return
         font_size = round((width_resize + height_resize)/2*10)
         #  Determine which team's turn based on the number of games played within a session.
         if self.first_game % 2 == 0:
             self.team = 'Blue'
-            next_turn_btn = ttk.Button(frame,text = 'Red Turn', style='my.TButton', command=self.Next_Turn)
+            next_turn_btn = ttk.Button(frame,text = 'Blue Turn', style='my.TButton', command=self.Next_Turn)
             next_turn_btn.grid(row=12, column=2, padx=10, pady=10)
         else:
             self.team = 'Red'
-            next_turn_btn = ttk.Button(frame,text = 'Blue Turn', style='my.TButton', command=self.Next_Turn)
+            next_turn_btn = ttk.Button(frame,text = 'Red Turn', style='my.TButton', command=self.Next_Turn)
             next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
+
         start_game_btn.state(['disabled'])
         pause_resume_btn.state(['!disabled'])
         settings_btn.state(['disabled'])
@@ -670,7 +682,7 @@ class Game_Control:
         else:
             self.blue_time = 0                   #  tracks time of blue team's current turn
 
-        self.task()                              #
+        self.task()
         root.mainloop()
 
     def Settings(self):
@@ -921,9 +933,9 @@ class Game_Control:
         :return:
         '''
         if self.team == 'Blue':
-            next_turn_btn = ttk.Button(frame, text='Red Turn', style='my.TButton', command=self.Next_Turn)
-        else:
             next_turn_btn = ttk.Button(frame, text='Blue Turn', style='my.TButton', command=self.Next_Turn)
+        else:
+            next_turn_btn = ttk.Button(frame, text='Red Turn', style='my.TButton', command=self.Next_Turn)
         next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
         self.pause = self.pause ^ 1
         if self.pause == 0:
@@ -1010,6 +1022,7 @@ class Game_Control:
         Called every 1000 ms, task performs display updates for scores, elapsed time and other status parameters.
         :return:
         '''
+
         font_size = round((width_resize + height_resize)/2*10)
         #  If game has been paused (i.e., self.pause = 0), then task does not run.
         if self.pause:
@@ -1145,8 +1158,8 @@ class Game_Control:
 
         #  In order to allow the Tkinter GUI to interact with the players (button selections etc. . .), all other programmatic
         #  updates are performed by the task function which is automatically called every 1000 ms.
-        root.after(1000, self.task)
 
+        root.after(100, self.task)
 
     def Op_Turn(self):
         '''
