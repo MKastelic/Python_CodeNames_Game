@@ -1159,7 +1159,7 @@ class Game_Control:
         #  In order to allow the Tkinter GUI to interact with the players (button selections etc. . .), all other programmatic
         #  updates are performed by the task function which is automatically called every 1000 ms.
 
-        root.after(100, self.task)
+        root.after(1000, self.task)
 
     def Op_Turn(self):
         '''
