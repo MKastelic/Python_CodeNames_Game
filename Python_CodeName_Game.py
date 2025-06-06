@@ -565,6 +565,10 @@ class Game_Control:
         Label(frame, text=str(self.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
         Label(frame, text=str(self.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
         Label(frame, text=str(self.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
+        Label(frame, textvariable=text_blue_time, foreground='blue', font=('Courier', font_size, 'bold'),
+              justify=RIGHT).grid(row=8, column=1, padx=5, pady=5)
+        Label(frame, textvariable=text_red_time, foreground='red', font=('Courier', font_size, 'bold'),
+              justify=RIGHT).grid(row=8, column=2, padx=5, pady=5)
 
         #  Based on which time mode has been selected from the "Settings" window, configure the status display and variables to contain the buttons
         #  and fields needed to control and report the time tracking during play.
@@ -577,16 +581,28 @@ class Game_Control:
 
             Label(frame, text='SpyMaster Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
             Label(frame, text='Operative Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=2,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=1,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=2,padx=5,pady=5)
+            Label(frame, textvariable=text_red_spymaster_remain, foreground='blue',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
+            Label(frame, textvariable=text_blue_operative_remain, foreground='blue',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=1, padx=5, pady=5)
+            Label(frame, textvariable=text_red_spymaster_remain, foreground='red',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
+            Label(frame, textvariable=text_red_operative_remain, foreground='red',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=2, padx=5, pady=5)
         elif self.time_config == 1:
             next_turn_btn.state(['!disabled'])
             self.master = False
             Label(frame, text='    Team Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
+            #Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
+            Label(frame, textvariable=text_blue_time_remain, foreground='blue',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
+            Label(frame, textvariable=text_red_time_remain, foreground='red',
+                  font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
         else:
             next_turn_btn.state(['!disabled'])
             self.master = False
@@ -1027,10 +1043,9 @@ class Game_Control:
         #  If game has been paused (i.e., self.pause = 0), then task does not run.
         if self.pause:
             if self.team == 'Blue':
-
                 self.blue_time = self.blue_total + time() - self.start_time
-                Label(frame, text='{0:5.0f} s'.format(self.blue_time), foreground='blue', font=('Courier', font_size, 'bold'),
-                      justify=RIGHT).grid(row=8, column=1, padx=5, pady=5)
+                int_blue_time = IntVar(value=self.blue_time)
+                text_blue_time.set(str(int_blue_time.get()))
                 try:
                     if self.blue_hold_time_remain > 0:
                         self.blue_time_remain = (self.start_turn_time - time()) + self.blue_hold_time_remain
@@ -1071,10 +1086,10 @@ class Game_Control:
                     if self.blue_operative_remain < 1:
                         self.blue_operative_remain = 0
                         self.Next_Turn()
-                    Label(frame, text='{0:5.0f} s'.format(int(self.blue_spymaster_remain)), foreground='blue',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
-                    Label(frame, text='{0:5.0f} s'.format(int(self.blue_operative_remain)), foreground='blue',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=1, padx=5, pady=5)
+                    int_blue_spymaster_remain = IntVar(value=self.blue_spymaster_remain)
+                    text_blue_spymaster_remain.set(str(int_blue_spymaster_remain.get()))
+                    int_blue_operative_remain = IntVar(value=self.blue_operative_remain)
+                    text_blue_operative_remain.set(str(int_blue_operative_remain.get()))
                 elif self.time_config == 1:
                     #  In "Shared" time mode, play multiple alarm sound when team time remaining is < 20 seconds.
                     if self.blue_time_remain < 20 and self.play_flag == 0:
@@ -1085,12 +1100,12 @@ class Game_Control:
                     if self.blue_time_remain < 1:
                         self.blue_time_remain = 0
                         self.Next_Turn()
-                    Label(frame, text='{0:5.0f} s'.format(self.blue_time_remain), foreground='blue',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
+                    int_blue_time_remain = IntVar(value=self.blue_time_remain)
+                    text_blue_time_remain.set(str(int_blue_time_remain.get()))
             else:
                 self.red_time = self.red_total + time() - self.start_time
-                Label(frame, text='{0:5.0f} s'.format(self.red_time), foreground='red', font=('Courier', font_size, 'bold'),
-                      justify=RIGHT).grid(row=8, column=2, padx=5, pady=5)
+                int_red_time = IntVar(value=self.red_time)
+                text_red_time.set(str(int_red_time.get()))
                 try:
                     if self.red_hold_time_remain > 0:
                         self.red_time_remain = (self.start_turn_time - time()) + self.red_hold_time_remain
@@ -1129,10 +1144,10 @@ class Game_Control:
                     if self.red_operative_remain < 1:
                         self.red_operative_remain = 0
                         self.Next_Turn()
-                    Label(frame, text='{0:5.0f} s'.format(self.red_spymaster_remain), foreground='red',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
-                    Label(frame, text='{0:5.0f} s'.format(self.red_operative_remain), foreground='red',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=2, padx=5, pady=5)
+                    int_red_spymaster_remain = IntVar(value=self.red_spymaster_remain)
+                    text_red_spymaster_remain.set(str(int_red_spymaster_remain.get()))
+                    int_red_operative_remain = IntVar(value=self.red_operative_remain)
+                    text_red_operative_remain.set(str(int_red_operative_remain.get()))
                 elif self.time_config == 1:
                     if self.red_time_remain < 20 and self.play_flag == 0:
                         self.play_flag = 1
@@ -1141,8 +1156,8 @@ class Game_Control:
                     if self.red_time_remain < 1:
                         self.red_time_remain = 0
                         self.Next_Turn()
-                    Label(frame, text='{0:5.0f} s'.format(self.red_time_remain), foreground='red',
-                          font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=2, padx=5, pady=5)
+                    int_red_time_remain = IntVar(value=self.red_time_remain)
+                    text_red_time_remain.set(str(int_red_time_remain.get()))
 
             #  If the random mole option has been selected in the "Settings" menu, call the Mole_Agent() method at a random interval which is not
             #  to be less than 25 seconds and is proportional to the mole frequency selected.  At the highest frequency setting allowed in the
@@ -1388,6 +1403,14 @@ def BlankHTML():
 """
 
 root = Tk()
+text_blue_time = StringVar()
+text_blue_spymaster_remain = StringVar()
+text_blue_operative_remain = StringVar()
+text_blue_time_remain = StringVar()
+text_red_time = StringVar()
+text_red_spymaster_remain = StringVar()
+text_red_operative_remain = StringVar()
+text_red_time_remain = StringVar()
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 width = 1920.0                                #  default screen width/height stored images are based on.
@@ -1470,7 +1493,7 @@ for file in files:
 
     if file_ext == 'gif':
         temp_image = PIL.Image.open(Assets_dir + file.name)
-        temp_image = temp_image.resize((new_width, new_height), PIL.Image.ANTIALIAS)
+        temp_image = temp_image.resize((new_width, new_height), PIL.Image.Resampling.LANCZOS)
         temp_image.save(Assets_dir + r'/resize/' + file.name)
         Cards[file_basename] = PhotoImage(file=Assets_dir + r'/resize/' + file.name)
 
