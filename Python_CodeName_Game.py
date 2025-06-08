@@ -487,7 +487,7 @@ class Game_Control:
         and create a randomized list of codewords from the code_words.txt file found in the Assets subdirectory from
         where the program runs.
         '''
-        
+
         self.first_game = 2                      #  counter to track the number of the game in the session series
         self.blue_score = 0                      #  number of games in the session won by the blue team
         self.red_score = 0                       #  number of games in the session won by the red team
@@ -527,6 +527,7 @@ class Game_Control:
         :return:
         '''
 
+        global gui
 
         try:
             SendFTP()
@@ -1039,6 +1040,8 @@ class Game_Control:
         :return:
         '''
 
+        global gui
+        
         font_size = round((width_resize + height_resize)/2*10)
         #  If game has been paused (i.e., self.pause = 0), then task does not run.
         if self.pause:
@@ -1163,7 +1166,7 @@ class Game_Control:
             #  to be less than 25 seconds and is proportional to the mole frequency selected.  At the highest frequency setting allowed in the
             #  menu, the average mole appearance is about once a minute.  At the lowest frequency it is about . . .
             if self.mole_freq != 0:
-                if 10.03 * random.random() > 9.999:
+                if 10.5 * random.random() > 9.999:
                     time_between_events = time() - self.random_start_time
                     if time_between_events > 25:
                         self.event_count += 1
