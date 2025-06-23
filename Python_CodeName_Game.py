@@ -529,13 +529,6 @@ class Game_Control:
 
         global gui
 
-        try:
-            SendFTP()
-        except:
-            okay = messagebox.showerror(message='FTP connection cannot be made. Re-enter credentials')
-            if okay:
-                Set_FTP()
-                return
         font_size = round((width_resize + height_resize)/2*10)
         #  Determine which team's turn based on the number of games played within a session.
         if self.first_game % 2 == 0:
@@ -698,6 +691,14 @@ class Game_Control:
             self.red_time = 0                    #  tracks time of red team's current turn
         else:
             self.blue_time = 0                   #  tracks time of blue team's current turn
+
+        try:
+            SendFTP()
+        except:
+            okay = messagebox.showerror(message='FTP connection cannot be made. Re-enter credentials')
+            if okay:
+                Set_FTP()
+                return
 
         self.task()
         root.mainloop()
