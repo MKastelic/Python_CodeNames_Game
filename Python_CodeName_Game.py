@@ -44,7 +44,7 @@ class Board:
         frame1.grid(row=0,column=1)
         frame1.config(height=600, width=400, relief=RIDGE)
         #  Resize font and spacing of codewords based on current screen size being used.
-        font_size = round((width_resize + height_resize)/2.0*20)
+        font_size = round((width_resize + height_resize)/2.0*28)
         padx_size = int(width_resize*10)
         pady_size = round(height_resize*10)
 
@@ -93,7 +93,7 @@ class Board:
         :param word_array:
         :return:
         '''
-        font_size = round((width_resize + height_resize)/2*10)
+        font_size = round((width_resize + height_resize)/2*18)
         
         #  If the game is not paused and it is not the spymaster's turn in "Split" time mode then allow operatives to make contacts.
         if game.pause and not game.master:
@@ -125,7 +125,9 @@ class Board:
                     game.blue_score += 1
                     Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
                 winsound.PlaySound(None, winsound.SND_FILENAME + winsound.SND_ASYNC)
-                startfile(Assets_dir + 'MovieClips\\SALT Assassination1.mp4')
+                #startfile(Assets_dir + 'MovieClips\\SALT Assassination1.mp4')
+                startfile(Assets_dir + str(movie_files[-1]))
+                movie_files.pop()
                 #  Game is paused and the board is cleared from the browser.  Players can then choose to start a new game.
                 game.Pause_Resume()
                 BlankHTML()
@@ -252,9 +254,9 @@ class Board:
 
         self.blue_check = False         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False          #  set to True only if the Red agent selected as a double agent is found on the board and available.
-        da_setup_window.geometry('400x180+600+400')
-        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', 10)).grid(row=3, column=0, columnspan=2)
-        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', 10, 'bold')).grid(row=5, column=1)
+        da_setup_window.geometry('650x210+600+400')
+        Label(da_setup_window, text='Enter double agent\'s insertion code word.', font=('Courier', 18)).grid(row=3, column=0, columnspan=2)
+        Label(da_setup_window, text=tc.capitalize(), foreground=tc, font=('Courier', 18, 'bold')).grid(row=5, column=1)
 
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
@@ -265,11 +267,11 @@ class Board:
         else:
             use_board = cboard
 
-        button1 = ttk.Button(da_setup_window, text='Check',
+        button1 = ttk.Button(da_setup_window, text='Check', style='my.TButton',
                              command=lambda: self.Spy_Check(da_setup_window, tc, use_board)).grid(row=18, column=0, pady=10)
-        button3 = ttk.Button(da_setup_window, text='Proceed',
+        button3 = ttk.Button(da_setup_window, text='Proceed', style='my.TButton',
                              command=lambda: self.DA_Proceed(da_setup_window, use_board)).grid(row=19, column=0, pady=25)
-        button4 = ttk.Button(da_setup_window, text='Cancel', command=lambda: self.DA_Cancel(da_setup_window)).grid(row=19, column=1, pady=25)
+        button4 = ttk.Button(da_setup_window, text='Cancel', style='my.TButton', command=lambda: self.DA_Cancel(da_setup_window)).grid(row=19, column=1, pady=25)
         da_setup_window.mainloop()
 
     def DA_Proceed(self, window, c_or_iboard):
@@ -285,7 +287,7 @@ class Board:
         if game.team == 'Blue' and self.red_check:
             window.destroy()
             game.blue_da -= 1
-            Label(frame, text='{0:5d}'.format(game.blue_da), foreground='blue', font=('Courier', 10, 'bold'),
+            Label(frame, text='{0:1d}'.format(game.blue_da), foreground='blue', font=('Courier', font_size, 'bold'),
                   justify=RIGHT).grid(row=7, column=1, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -294,7 +296,7 @@ class Board:
         elif game.team == 'Red' and self.blue_check:
             window.destroy()
             game.red_da -= 1
-            Label(frame, text='{0:5d}'.format(game.red_da), foreground='red', font=('Courier', 10, 'bold'),
+            Label(frame, text='{0:1d}'.format(game.red_da), foreground='red', font=('Courier', font_size, 'bold'),
                   justify=RIGHT).grid(row=7, column=2, padx=5, pady=5)
             game.double_agent_btn.state(['disabled'])
             messagebox.showinfo(message='Double agent has been inserted.  No need to update browsers.')
@@ -314,27 +316,40 @@ class Board:
         game.red_da_codename = None
 
     def Swap(self):
+
         '''
         Allows Spymaster to exchange one of his/her agent's codename with one of the opponent's.  Typed codename entries for each team's
         agents are checked for accuracy and availability.  Entries are displayed as a series of asterisks to cover identity, and a random
         number of asterisks can be added by players to further disquise the true length of the codename.
         :return:
         '''
+
+        def on_enter_pressed_blue(event):
+            team_color = 'blue'
+            gui.Spy_Check(swap_setup_window, team_color, use_board)
+
+        def on_enter_pressed_red(event):
+            team_color = 'red'
+            gui.Spy_Check(swap_setup_window, team_color, use_board)
+
+
         self.blue_check = False                         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False                          #  set to True only if the Red agent selected as a double agent is found on the board and available.
         swap_setup_window = Toplevel()
-        swap_setup_window.geometry('400x180+600+400')
-        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', 10)).grid(row=3, column=0)
+        swap_setup_window.geometry('750x180+600+400')
+        Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', 18)).grid(row=3, column=0)
 
         #  Set up text entry fields to allow both blue and red agents to be selected for a potential spy swap.
         self.blue_entry = ttk.Entry(swap_setup_window, width=10)
-        self.blue_entry.config(show='*')
+        self.blue_entry.bind("<Return>", on_enter_pressed_blue)
+        self.blue_entry.config(show=' ')
         self.blue_entry.grid(row=4, column=0)
-        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', 10, 'bold')).grid(row=5, column=0)
+        Label(swap_setup_window, text='Blue', foreground='blue', font=('Courier', 18, 'bold')).grid(row=5, column=0)
         self.red_entry = ttk.Entry(swap_setup_window, width=10)
-        self.red_entry.config(show='*')
+        self.red_entry.bind("<Return>", on_enter_pressed_red)
+        self.red_entry.config(show=' ')
         self.red_entry.grid(row=4, column=1)
-        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', 10, 'bold')).grid(row=5, column=1)
+        Label(swap_setup_window, text='Red', foreground='red', font=('Courier', 18, 'bold')).grid(row=5, column=1)
         #  Get the status of the current game board and the initial game board and convert each to lists and compare for changes.
         current_board = self.Current_Board(root)
         cboard = current_board.tolist()
@@ -344,18 +359,20 @@ class Board:
         else:
             use_board = cboard
         #  Create buttons for spymasters to check their typed entries and proceed with spy swap or cancel the process.
+        '''
         button1 = ttk.Button(swap_setup_window, text='Check',
                              command=lambda: self.Spy_Check(swap_setup_window, 'blue', use_board)).grid(row=18, column=0,
                                                                                                    pady=10)
         button2 = ttk.Button(swap_setup_window, text='Check',
                              command=lambda: self.Spy_Check(swap_setup_window, 'red', use_board)).grid(row=18, column=1,
                                                                                                   pady=10)
-        button3 = ttk.Button(swap_setup_window, text='Proceed',
-                             command=lambda: self.Spy_Swap_Proceed(swap_setup_window, use_board)).grid(row=19, column=0,
-                                                                                                  pady=25)
-        button4 = ttk.Button(swap_setup_window, text='Cancel', command=lambda: swap_setup_window.destroy()).grid(row=19,
-                                                                                                                 column=1,
-                                                                                                                 pady=25)
+        '''
+
+        button3 = ttk.Button(swap_setup_window, text='Proceed', style='my.TButton',
+                             command=lambda: self.Spy_Swap_Proceed(swap_setup_window, use_board)).grid(row=19, column=0,pady=25)
+        button4 = ttk.Button(swap_setup_window, text='Cancel', style='my.TButton',
+                            command=lambda: swap_setup_window.destroy()).grid(row=19,column=1,pady=25)
+
         swap_setup_window.mainloop()
 
     def Spy_Swap_Proceed(self, window, c_or_iboard):
@@ -372,13 +389,13 @@ class Board:
             window.destroy()
             if game.team == 'Blue':
                 game.blue_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.blue_swaps), foreground='blue', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:1d}'.format(game.blue_swaps), foreground='blue', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=6, column=1, padx=5, pady=5)
                 if game.blue_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
             else:
                 game.red_swaps -= 1
-                Label(frame, text='{0:5d}'.format(game.red_swaps), foreground='red', font=('Courier', 10, 'bold'),
+                Label(frame, text='{0:1d}'.format(game.red_swaps), foreground='red', font=('Courier', font_size, 'bold'),
                       justify=RIGHT).grid(row=6, column=2, padx=5, pady=5)
                 if game.red_swaps == 0:
                     game.spy_swap_btn.state(['disabled'])
@@ -404,10 +421,10 @@ class Board:
         #  Get the text entry for either team and remove extra '*' spymaster may have typed to provide extra hiding of entry.
         #  Add two LF and convert to upper case to be compatible with display of codewords on the game board.
         if team_color == 'blue':
-            b_word = '\n\n' + self.blue_entry.get().strip('*').upper()
+            b_word = '\n\n' + self.blue_entry.get().upper()
             team_col = 0
         else:
-            b_word = '\n\n' + self.red_entry.get().strip('*').upper()
+            b_word = '\n\n' + self.red_entry.get().upper()
             team_col = 1
         #  Check if the entry exists on the board.  If it does, find the row and column it is in.  Then check if the agent has been
         #  contacted and the expected color.  If so, display that there is a "Match."
@@ -417,7 +434,7 @@ class Board:
                     row = i
                     col = c_or_iboard[0][i].index(b_word)
             if (int(c_or_iboard[2][row][col]) == 0) and (c_or_iboard[1][row][col] == team_color.capitalize()):
-                Label(window, text='Match', foreground='black', font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+                Label(window, text='Match', foreground='black', font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
                 #  Flag that the spy check was successful and make the spy swap on this copy of the board.  Also set the
                 #  red/blue_da_codename variable to the codename found on the board to track double agent status.
                 if team_color == 'blue':
@@ -430,12 +447,12 @@ class Board:
                     game.blue_da_codename = (c_or_iboard[0][row][col]).upper()
             else:
                 okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
-                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
                 if okay:
                     window.lift(root)
         else:
             okay = messagebox.showerror(message='No match found for codename entered')
-            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 10, 'bold')).grid(row=5, column=team_col)
+            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
             if okay:
                 window.lift(root)
 
@@ -529,16 +546,16 @@ class Game_Control:
 
         global gui
 
-        font_size = round((width_resize + height_resize)/2*10)
+        font_size = round((width_resize + height_resize)/2*18)
         #  Determine which team's turn based on the number of games played within a session.
         if self.first_game % 2 == 0:
             self.team = 'Blue'
             next_turn_btn = ttk.Button(frame,text = 'Blue Turn', style='my.TButton', command=self.Next_Turn)
-            next_turn_btn.grid(row=12, column=2, padx=10, pady=10)
+            next_turn_btn.grid(row=12, column=1, padx=10, pady=10)
         else:
             self.team = 'Red'
             next_turn_btn = ttk.Button(frame,text = 'Red Turn', style='my.TButton', command=self.Next_Turn)
-            next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
+            next_turn_btn.grid(row=12, column=1, padx=padx_size, pady=pady_size)
 
         start_game_btn.state(['disabled'])
         pause_resume_btn.state(['!disabled'])
@@ -554,6 +571,14 @@ class Game_Control:
             spys = np.array(['Red']*9 + ['Blue']*8 + ['Yellow']*7 + ['Assassin'])
             self.red_contacts = 9
             self.blue_contacts = 8
+
+        self.blue_time = 0
+        int_blue_time = IntVar(value=self.blue_time)
+        text_blue_time.set(str(int_blue_time.get()))
+        self.red_time = 0
+        int_red_time = IntVar(value=self.red_time)
+        text_red_time.set(str(int_red_time.get()))
+
         #  Display the number of contacts remaining and scores for each team.
         Label(frame, text=str(self.blue_contacts), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=2,column=1)
         Label(frame, text=str(self.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
@@ -567,19 +592,19 @@ class Game_Control:
         #  Based on which time mode has been selected from the "Settings" window, configure the status display and variables to contain the buttons
         #  and fields needed to control and report the time tracking during play.
         if self.time_config == 2:
-            self.operatives_turn_btn = ttk.Button(frame,text = 'Operatives Turn',style='my.TButton', command=self.Op_Turn)
+            self.operatives_turn_btn = ttk.Button(frame,text = 'Ops Turn',style='my.TButton', command=self.Op_Turn)
             self.operatives_turn_btn.grid(row=12, column=0, padx=10, pady=10)
             self.operatives_turn_btn.state(['!disabled'])
             next_turn_btn.state(['disabled'])
             self.master = True
 
-            Label(frame, text='SpyMaster Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
-            Label(frame, text='Operative Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=0,padx=5,pady=5)
+            Label(frame, text='Master Time', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
+            Label(frame, text='Ops Time', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=0,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=1,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.Spymaster_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.Operative_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=5,column=2,padx=5,pady=5)
-            Label(frame, textvariable=text_red_spymaster_remain, foreground='blue',
+            Label(frame, textvariable=text_blue_spymaster_remain, foreground='blue',
                   font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=4, column=1, padx=5, pady=5)
             Label(frame, textvariable=text_blue_operative_remain, foreground='blue',
                   font=('Courier', font_size, 'bold'), justify=RIGHT).grid(row=5, column=1, padx=5, pady=5)
@@ -590,7 +615,7 @@ class Game_Control:
         elif self.time_config == 1:
             next_turn_btn.state(['!disabled'])
             self.master = False
-            Label(frame, text='    Team Time Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
+            Label(frame, text='    Team Time Left', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=0,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=1,padx=5,pady=5)
             #Label(frame, text='{0:5.0f} s'.format(int(self.team_time)),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=4,column=2,padx=5,pady=5)
             Label(frame, textvariable=text_blue_time_remain, foreground='blue',
@@ -645,9 +670,9 @@ class Game_Control:
         if self.max_spy_swap != 0:
             self.red_swaps = self.max_spy_swap
             self.blue_swaps = self.max_spy_swap
-            Label(frame, text='     Spy Swaps Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.blue_swaps),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.red_swaps),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=2,padx=5,pady=5)
+            Label(frame, text='Spy Swaps', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=0,padx=5,pady=5)
+            Label(frame, text='{0:1d}'.format(self.blue_swaps),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=1,padx=5,pady=5)
+            Label(frame, text='{0:1d}'.format(self.red_swaps),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=6,column=2,padx=5,pady=5)
             self.spy_swap_btn = ttk.Button(frame,text = 'Spy Swap',style='my.TButton', command=gui.Swap)
             self.spy_swap_btn.grid(row=13, column=0, padx=10, pady=10)
         else:
@@ -660,15 +685,30 @@ class Game_Control:
             self.red_da = self.max_double_agents
             self.blue_da = self.max_double_agents
 
-            Label(frame, text=' Double Agents Remaining', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=0,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.blue_da),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=1,padx=5,pady=5)
-            Label(frame, text='{0:5d}'.format(self.red_da),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=2,padx=5,pady=5)
+            Label(frame, text='Double Agents', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=0,padx=5,pady=5)
+            Label(frame, text='{0:1d}'.format(self.blue_da),foreground='blue',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=1,padx=5,pady=5)
+            Label(frame, text='{0:1d}'.format(self.red_da),foreground='red',font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=7,column=2,padx=5,pady=5)
             self.double_agent_btn = ttk.Button(frame,text = 'Double Agent',style='my.TButton', command=gui.DA)
             self.double_agent_btn.grid(row=14, column=0, padx=10, pady=10)
         else:
             self.red_da = 0
             self.blue_da = 0
             self.double_agent_btn = ttk.Button(frame)
+
+        '''
+        if self.team == 'Blue':
+            self.red_time = 0                    #  tracks time of red team's current turn
+        else:
+            self.blue_time = 0                   #  tracks time of blue team's current turn
+        '''
+
+        try:
+            SendFTP()
+        except:
+            okay = messagebox.showerror(message='FTP connection cannot be made. Re-enter credentials')
+            if okay:
+                Set_FTP()
+                return
 
         #  These game variables need to be initialized at the start of each new game within a session of play.
         self.pause = 1                           #  set to "0" if game is paused
@@ -687,18 +727,6 @@ class Game_Control:
         self.play_flag = 0                       #  set to "1" if sound effects play during operative's turn in "Split" time mode
         self.play_flag_2 = 0                     #  set to "1" if sound effects play during spymaster's turn in "Split" time mode
 
-        if self.team == 'Blue':
-            self.red_time = 0                    #  tracks time of red team's current turn
-        else:
-            self.blue_time = 0                   #  tracks time of blue team's current turn
-
-        try:
-            SendFTP()
-        except:
-            okay = messagebox.showerror(message='FTP connection cannot be made. Re-enter credentials')
-            if okay:
-                Set_FTP()
-                return
 
         self.task()
         root.mainloop()
@@ -954,7 +982,7 @@ class Game_Control:
             next_turn_btn = ttk.Button(frame, text='Blue Turn', style='my.TButton', command=self.Next_Turn)
         else:
             next_turn_btn = ttk.Button(frame, text='Red Turn', style='my.TButton', command=self.Next_Turn)
-        next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
+        next_turn_btn.grid(row=12, column=1, padx=padx_size, pady=pady_size)
         self.pause = self.pause ^ 1
         if self.pause == 0:
             next_turn_btn.state(['disabled'])
@@ -1029,7 +1057,7 @@ class Game_Control:
         #  switched before operatives have been brought into play.  Set self.master to True to indicate that turn starts
         #  with team's spymaster on the clock.
         next_turn_btn = ttk.Button(frame, text=self.team + ' Turn', style='my.TButton', command=self.Next_Turn)
-        next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
+        next_turn_btn.grid(row=12, column=1, padx=padx_size, pady=pady_size)
         if self.time_config == 2:
             self.operatives_turn_btn.state(['!disabled'])
             next_turn_btn.state(['disabled'])
@@ -1043,7 +1071,7 @@ class Game_Control:
 
         global gui
         
-        font_size = round((width_resize + height_resize)/2*10)
+        font_size = round((width_resize + height_resize)/2*18)
         #  If game has been paused (i.e., self.pause = 0), then task does not run.
         if self.pause:
             if self.team == 'Blue':
@@ -1178,7 +1206,7 @@ class Game_Control:
         #  In order to allow the Tkinter GUI to interact with the players (button selections etc. . .), all other programmatic
         #  updates are performed by the task function which is automatically called every 1000 ms.
 
-        root.after(1000, self.task)
+        root.after(500, self.task)
 
     def Op_Turn(self):
         '''
@@ -1429,9 +1457,9 @@ frame.grid(row=0,column=0,sticky='ne')
 frame.config(height=frame_height, width=frame_width, relief=GROOVE)
 
 #  Use an average of horizontal/vertical resize factors to scale font and spacing of text.
-font_size = round((width_resize + height_resize)/2*10)
-padx_size = int(width_resize*10)
-pady_size = round(height_resize*10)
+font_size = round((width_resize + height_resize)/2*18)
+padx_size = int(width_resize*5)
+pady_size = round(height_resize*5)
 
 #  Button text can only be modified using style parameters.
 s = ttk.Style()
@@ -1442,42 +1470,47 @@ s.configure('my.TButton', font=('Courier', font_size))
 game = Game_Control()
 
 #  Create and initialize status display of team scores, contacts, and total time elapsed.
-Label(frame, text='BLUE', foreground='blue', font =('Courier', font_size, 'bold')).grid(row=1,column=1,padx=5, pady=5)
-Label(frame, text='RED', foreground='red', font =('Courier', font_size, 'bold')).grid(row=1,column=2,padx=5, pady=5)
-Label(frame, text='     Contacts Remaining', wraplength=210, font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=2,column=0,padx=5, pady=5)
-Label(frame, text='   Cumulative Team Time', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=8,column=0,padx=5,pady=5)
-Label(frame, text='   Team Score', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=9,column=0,padx=5,pady=5)
+Label(frame, text='BLUE', foreground='blue', font =('Courier', font_size, 'bold')).grid(row=1,column=1,padx=3, pady=3)
+Label(frame, text='RED', foreground='red', font =('Courier', font_size, 'bold')).grid(row=1,column=2,padx=3, pady=3)
+Label(frame, text='Contacts', wraplength=210, font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=2,column=0,padx=5, pady=5)
+Label(frame, text='   Time', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=8,column=0,padx=5,pady=5)
+Label(frame, text='   Score', wraplength=210,font=('Courier', font_size, 'bold'),justify=RIGHT).grid(row=9,column=0,padx=5,pady=5)
 Label(frame, text=str(game.blue_score), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=9,column=1)
 Label(frame, text=str(game.red_score), foreground='red', font=('Courier',font_size, 'bold')).grid(row=9,column=2)
 Label(frame, text=str(game.blue_contacts), foreground='blue', font=('Courier',font_size, 'bold')).grid(row=2,column=1)
 Label(frame, text=str(game.red_contacts), foreground='red', font=('Courier',font_size, 'bold')).grid(row=2,column=2)
 
+Label(frame, text='0', foreground='blue', font=('Courier', font_size, 'bold'),
+              justify=RIGHT).grid(row=8, column=1, padx=5, pady=5)
+Label(frame, text='0', foreground='red', font=('Courier', font_size, 'bold'),
+              justify=RIGHT).grid(row=8, column=2, padx=5, pady=5)
+
 #  Create game control buttons
 #  The "Settings" button allows players to configure whether team time is tracked (and how), and to select other
 #  optional game variants.
 settings_btn = ttk.Button(frame,text = 'Settings', style='my.TButton', command=game.Settings)
-settings_btn.grid(row=15, column=2, padx=padx_size, pady=pady_size)
+settings_btn.grid(row=18, column=1, padx=padx_size, pady=pady_size)
 
 #  The "Start Game" button initializes a new game board (5x5 array of codenames), implementing any additional options
 #  and parameters selected in game settings.
 start_game_btn = ttk.Button(frame,text = 'Start Game', style='my.TButton', command=game.New_Game)
-start_game_btn.grid(row=12, column=1, padx=padx_size, pady=pady_size)
+start_game_btn.grid(row=12, column=0, padx=padx_size, pady=pady_size)
 
 #  The "Pause/Resume" button allows game play to be suspended for an indefinite period and then resumed.
 pause_resume_btn = ttk.Button(frame,text = 'Pause/Resume', style='my.TButton', command=game.Pause_Resume)
-pause_resume_btn.grid(row=15, column=1, padx=padx_size, pady=pady_size)
+pause_resume_btn.grid(row=15, column=0, padx=padx_size, pady=pady_size)
 pause_resume_btn.state(['disabled'])
 
 #  The "next_turn_btn" actually displays the color of the team which takes control of the board when pressed.  It is
 #  initialized here to "Red Turn" since at the start of a new session (consisting of multiple alternating team turns),
 #  the Blue team always goes first.
 next_turn_btn = ttk.Button(frame,text = 'Red Turn', style='my.TButton', command=game.Next_Turn)
-next_turn_btn.grid(row=12, column=2, padx=padx_size, pady=pady_size)
+next_turn_btn.grid(row=12, column=1, padx=padx_size, pady=pady_size)
 next_turn_btn.state(['disabled'])
 
 #  The "Help" button displays a PDF document which contains the supplementary rules to the original codenames game.
 help_btn = ttk.Button(frame, text = 'Help', style='my.TButton', command=Game_Control.Open_File)
-help_btn.grid(row=15, column=0)
+help_btn.grid(row=18, column=0)
 
 #  Images used in the game are based on a width/height of 270x187 px for a screen resolution of 1920x1200.  New
 #  dimensions are calculated based on the resize factors calculated above for the current screen size.
@@ -1488,6 +1521,7 @@ new_height = int(height_resize*185)
 #  To populate this dict, scan the "Assets_dir" where the game program resides, resize only "gif" files using the
 #  Python Image Library (PIL) and store the resulting image in a subdirectory (/resize).  Use this image's base filename
 #  as the Cards dict key and set its value to the PhotoImage object of the resized image file.
+movie_files = []
 Cards = {}
 Assets_dir = os.getcwd() + '\\Assets\\'
 files = list(os.scandir(Assets_dir))
@@ -1500,6 +1534,11 @@ for file in files:
         temp_image = temp_image.resize((new_width, new_height), PIL.Image.Resampling.LANCZOS)
         temp_image.save(Assets_dir + r'/resize/' + file.name)
         Cards[file_basename] = PhotoImage(file=Assets_dir + r'/resize/' + file.name)
+
+    if file_ext == 'mp4':
+        movie_files.append(file_basename + '.' + file_ext)
+
+
 
 #  The Python codenames game replaces the spy master key card with a dynamically updated electronic version which can
 #  be displayed on any mobile device running a web browser.  Connection settings must be provided for an FTP account to
