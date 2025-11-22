@@ -234,19 +234,28 @@ class Board:
         :return:
         '''
 
+        def da_enter_pressed_blue(event):
+            gui.Spy_Check(da_setup_window, 'blue', use_board, True)
+
+        def da_enter_pressed_red(event):
+            gui.Spy_Check(da_setup_window, 'red', use_board, True)
+
+
         da_setup_window = Toplevel()
         #  Setup text entry fields depending on the team in play and confirm the team has double agents to use.
         if game.team == 'Blue' and game.blue_da:
             tc = 'red'
-            team_col = 1                                          # used to specify column of display status for red team
+            #team_col = 1                                          # used to specify column of display status for red team
             self.red_entry = ttk.Entry(da_setup_window, width=10)
-            self.red_entry.config(show='*')
+            self.red_entry.bind("<Return>", da_enter_pressed_red)
+            self.red_entry.config(show=' ')
             self.red_entry.grid(row=18, column=1)
         elif game.team == 'Red' and game.red_da:
             tc = 'blue'
-            team_col = 0                                           #  used to specify column of display status for blue team
+            #team_col = 0                                           #  used to specify column of display status for blue team
             self.blue_entry = ttk.Entry(da_setup_window, width=10)
-            self.blue_entry.config(show='*')
+            self.blue_entry.bind("<Return>", da_enter_pressed_blue)
+            self.blue_entry.config(show=' ')
             self.blue_entry.grid(row=18, column=1)
         else:
             messagebox.showerror(message='{} Team does not have any double agents left to insert'.format(game.team))
@@ -267,8 +276,8 @@ class Board:
         else:
             use_board = cboard
 
-        button1 = ttk.Button(da_setup_window, text='Check', style='my.TButton',
-                             command=lambda: self.Spy_Check(da_setup_window, tc, use_board)).grid(row=18, column=0, pady=10)
+        #button1 = ttk.Button(da_setup_window, text='Check', style='my.TButton',
+        #                     command=lambda: self.Spy_Check(da_setup_window, tc, use_board)).grid(row=18, column=0, pady=10)
         button3 = ttk.Button(da_setup_window, text='Proceed', style='my.TButton',
                              command=lambda: self.DA_Proceed(da_setup_window, use_board)).grid(row=19, column=0, pady=25)
         button4 = ttk.Button(da_setup_window, text='Cancel', style='my.TButton', command=lambda: self.DA_Cancel(da_setup_window)).grid(row=19, column=1, pady=25)
@@ -325,16 +334,14 @@ class Board:
         '''
 
         def on_enter_pressed_blue(event):
-            team_color = 'blue'
-            gui.Spy_Check(swap_setup_window, team_color, use_board)
+            gui.Spy_Check(swap_setup_window, 'blue', use_board, False)
 
         def on_enter_pressed_red(event):
-            team_color = 'red'
-            gui.Spy_Check(swap_setup_window, team_color, use_board)
-
+            gui.Spy_Check(swap_setup_window, 'red', use_board, False)
 
         self.blue_check = False                         #  set to True only if the Blue agent selected as a double agent is found on the board and available.
         self.red_check = False                          #  set to True only if the Red agent selected as a double agent is found on the board and available.
+
         swap_setup_window = Toplevel()
         swap_setup_window.geometry('750x180+600+400')
         Label(swap_setup_window, text='Enter code words to use in spy swap:', font=('Courier', 18)).grid(row=3, column=0)
@@ -409,7 +416,7 @@ class Board:
             if okay:
                 window.lift(root)
 
-    def Spy_Check(self, window, team_color, c_or_iboard):
+    def Spy_Check(self, window, team_color, c_or_iboard, DA):
         '''
         Performs codename entry check to make sure that it has not been mistyped and is an existing agent which has not yet been contacted.  Results
         are used by both Double Agent (DA) and Spy_Swap (Swap) above.
@@ -418,43 +425,71 @@ class Board:
         :param c_or_iboard:
         :return:
         '''
+
         #  Get the text entry for either team and remove extra '*' spymaster may have typed to provide extra hiding of entry.
         #  Add two LF and convert to upper case to be compatible with display of codewords on the game board.
         if team_color == 'blue':
-            b_word = '\n\n' + self.blue_entry.get().upper()
-            team_col = 0
+            b_word = self.blue_entry.get().upper()
+            if DA:
+                team_col = 1
+            else:
+                team_col = 0
         else:
-            b_word = '\n\n' + self.red_entry.get().upper()
+            b_word = self.red_entry.get().upper()
             team_col = 1
         #  Check if the entry exists on the board.  If it does, find the row and column it is in.  Then check if the agent has been
         #  contacted and the expected color.  If so, display that there is a "Match."
-        if b_word in list(itertools.chain(*c_or_iboard[0])):
-            for i in range(5):
-                if b_word in c_or_iboard[0][i]:
-                    row = i
-                    col = c_or_iboard[0][i].index(b_word)
-            if (int(c_or_iboard[2][row][col]) == 0) and (c_or_iboard[1][row][col] == team_color.capitalize()):
-                Label(window, text='Match', foreground='black', font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
-                #  Flag that the spy check was successful and make the spy swap on this copy of the board.  Also set the
-                #  red/blue_da_codename variable to the codename found on the board to track double agent status.
-                if team_color == 'blue':
-                    self.blue_check = True
-                    c_or_iboard[1][row][col] = 'Red'
-                    game.red_da_codename = (c_or_iboard[0][row][col]).upper()
+        w_count = 0
+        for word in list(itertools.chain(*c_or_iboard[0])):
+            word = word.strip('\n\n')
+            if word in b_word:
+                w_count+=1
+                if w_count > 1:
+                    okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
+                    Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
+                    if okay:
+                        window.lift(root)
+                print(word,b_word)
+                word = '\n\n' + word
+                for i in range(5):
+                    if word in c_or_iboard[0][i]:
+                        row = i
+                        col = c_or_iboard[0][i].index(word)
+                if (int(c_or_iboard[2][row][col]) == 0) and (c_or_iboard[1][row][col] == team_color.capitalize()):
+                    Label(window, text='Match', foreground='black', font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
+                    #  Flag that the spy check was successful and make the spy swap on this copy of the board.  Also set the
+                    #  red/blue_da_codename variable to the codename found on the board to track double agent status.
+                    '''
+                    Note:  red and blue_da_codename is set every time Spycheck is used.  This may create interference problems if DA is used along
+                    with Spy Swap.  Added DA switch to SpyCheck so red and blue_da_codename is only set if SpyCheck is being used by DA.
+                    '''
+                    if team_color == 'blue':
+                        self.blue_check = True
+                        c_or_iboard[1][row][col] = 'Red'
+                        if DA:
+                            game.red_da_codename = (c_or_iboard[0][row][col]).upper()
+                    else:
+                        self.red_check = True
+                        c_or_iboard[1][row][col] = 'Blue'
+                        if DA:
+                            game.blue_da_codename = (c_or_iboard[0][row][col]).upper()
                 else:
-                    self.red_check = True
-                    c_or_iboard[1][row][col] = 'Blue'
-                    game.blue_da_codename = (c_or_iboard[0][row][col]).upper()
+                    okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
+                    Label(window, text='  ' + team_color.capitalize() + '  ', foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
+                    if okay:
+                        window.lift(root)
+        if ((team_color == 'blue' and self.blue_check == False) or (team_color == 'red' and self.red_check == False) or (w_count > 1)):
+            if team_color == 'blue':
+                game.red_da_codename = None
+                self.blue_check = False
             else:
-                okay = messagebox.showerror(message='Agent is not available or has already been contacted.')
-                Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
-                if okay:
-                    window.lift(root)
-        else:
+                game.blue_da_codename = None
+                self.red_check = False
             okay = messagebox.showerror(message='No match found for codename entered')
-            Label(window, text=team_color.capitalize(), foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
+            Label(window, text='  ' + team_color.capitalize() + '  ', foreground=team_color, font=('Courier', 18, 'bold')).grid(row=5, column=team_col)
             if okay:
-                window.lift(root)
+                window.destroy()
+                #window.lift(root)
 
     def Mole_Agent(self):
         '''
